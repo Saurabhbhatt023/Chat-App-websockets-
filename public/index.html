@@ -8,25 +8,31 @@
 <body>
     <h1>Chat App</h1>
 
-    <input type = "text" id = "message"  placeholder = "Enter  Message" />
-    <button id = "sendBtn" >Send</button>
+    <input type="text" id="message" placeholder="Enter Message" />
+    <button id="sendBtn">Send</button>
 
-
-
-    <button onclick="createConnection()">Create Ws connection</button>
-    <script src="/socket.io/socket.io.js"></script>  <!-- ✅ Correct script reference -->
+    <!-- ✅ Include Socket.io client script -->
+    <script src="/socket.io/socket.io.js"></script>
+    
     <script>
+        const socket = io(); // ✅ io() is now defined
 
-          const socket  = io()
-         const sendBtn  = document.getElementById('sendBtn')
-            const messageInput  = document.getElementById('message')
-      
+        const sendBtn = document.getElementById('sendBtn');
+        const messageInput = document.getElementById('message');
 
-              sendBtn.addEventListener('click', (e) => {
-                const message  = messageInput.value;
-                console.log(message)
-                socket.emit('userMessage', message)
-              })
+        // ✅ Listen for messages from the server
+        socket.on('message', (message) => {
+            console.log("Received:", message);
+            const msgElement = document.createElement('p');
+            msgElement.innerText = message;
+            document.body.appendChild(msgElement); // Append message to page
+        });
+
+        sendBtn.addEventListener('click', () => {
+            const message = messageInput.value;
+            console.log("Sending:", message);
+            socket.emit('user-message', message); // ✅ Correct event name
+        });
     </script>
 </body>
 </html>
